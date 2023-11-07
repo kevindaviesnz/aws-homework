@@ -5,9 +5,7 @@ You are expected to:
     Be able to configure how big your tic tac toe.
         eg n =2  => 2 hyphen, 2 vertical lines
 Save into a file.
-'''
 
-'''
 eg _|_|_
    _|_|_
     | |
@@ -16,31 +14,36 @@ Notes:
 
 No matter the size of the board there will only be two rows of horizontal lines.
 
-The first and last rows will be always be vertical lines.
+The first, middle, and last sets of rows will be always be vertical lines.
 
 The number of rows between the first row and first row of horizontal lines, between the first row of horizontal lines and 
-second row of horizontal lines, and between the second row of horizontal lines and last row will be equal to n 
-where n is an integer representing the size of the board.
+second row of horizontal lines, and between the second row of horizontal lines and last row will be equal to the size of each cell.
 
-The number of spaces between each vertical line will always be equal to n.
+The number of spaces between each vertical line will always be equal to the size of each cell.
 
-The rows containing horizontal lines will always be the same and the rows containing vertical lines will always
+Each row containing horizontal lines will always be the same and each row containing vertical lines will always
 be the same meaning that we can assign them to variables.
 
 '''
 
-# Set the size of the board
-n = 4
+size_of_each_cell = 2
 
-horizontal_space = (' ' * n) # basically the width of each square - use to make things more readable.
-vertical_line_row = horizontal_space + '|' + horizontal_space + '|' + horizontal_space 
-# We need to take into account "_"s directly under vertical lines.
-horizontal_line_row = '_' * (n * 3) + ('_' * n) 
-vertical_rows = [vertical_line_row] * n
+output_file = 'tictactoe.txt'
+
+### Generate the board rows and store into an array.
+horizontal_space = f"{' ' * size_of_each_cell}"
+vertical_line_row = f"{horizontal_space}|{horizontal_space}|{horizontal_space}"
+# We need to take into account "_"s directly under vertical lines hence the extra '_' on either side.
+horizontal_line_row = f"{'_'}{'_' * (size_of_each_cell * 3)}{'_'}"
 # '*' in front of an array works like the javascript spread operator.
-board_rows = [*[vertical_line_row] * n, horizontal_line_row, *vertical_rows, horizontal_line_row, *vertical_rows] 
+board_rows = [*[vertical_line_row] * size_of_each_cell, horizontal_line_row, *[vertical_line_row] * size_of_each_cell, horizontal_line_row, *[vertical_line_row] * size_of_each_cell] 
+
+w = open(output_file, 'w')
 
 for row in board_rows:
-   print(row)
+    print(row)
+    w.write(row + '\n')
 
-# Save into a file
+
+
+
