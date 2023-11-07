@@ -11,6 +11,7 @@ Save into a file.
 eg _|_|_
    _|_|_
     | |
+
 Notes:
 
 No matter the size of the board there will only be two rows of horizontal lines.
@@ -26,11 +27,20 @@ The number of spaces between each vertical line will always be equal to n.
 The rows containing horizontal lines will always be the same and the rows containing vertical lines will always
 be the same meaning that we can assign them to variables.
 
-
 '''
-n = 2
+
+# Set the size of the board
+n = 4
+
 horizontal_space = (' ' * n) # basically the width of each square - use to make things more readable.
-vertical_line_row = horizontal_space + '|' + horizontal_space + '|' + horizontal_space
-horizontal_line_row = '_' * n * 4 # the horizontal rows have no spaces
-rows = [vertical_line_row, horizontal_line_row, vertical_line_row, horizontal_line_row, vertical_line_row * n]
-print(rows)
+vertical_line_row = horizontal_space + '|' + horizontal_space + '|' + horizontal_space 
+# We need to take into account "_"s directly under vertical lines.
+horizontal_line_row = '_' * (n * 3) + ('_' * n) 
+vertical_rows = [vertical_line_row] * n
+# '*' in front of an array works like the javascript spread operator.
+board_rows = [*[vertical_line_row] * n, horizontal_line_row, *vertical_rows, horizontal_line_row, *vertical_rows] 
+
+for row in board_rows:
+   print(row)
+
+# Save into a file
