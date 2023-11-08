@@ -20,21 +20,23 @@ from typing import Final
 
 alphabet:Final[str] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-def encryptChar(char:str, shift:int) -> str:
-    
-    # Putting these here to show that they are only used by the encryptedChar() function.
-    def indexOfChar(char:str) -> int:
-        return alphabet.index(char)
-    
-    def charAtIndex(index:int) -> str:
-        return alphabet[index if index < 26 else index % 26]
-    
-    return charAtIndex(indexOfChar(char) + shift) if char != ' ' else ' '
 
 def caesarInput(string_to_encrypt:str, shift:int) -> str:
+
+    def encryptChar(char:str, shift:int) -> str:
+        
+        def indexOfChar(char:str) -> int:
+            return alphabet.index(char)
+        
+        def charAtIndex(index:int) -> str:
+            return alphabet[index if index < 26 else index % 26]
+        
+        return charAtIndex(indexOfChar(char) + shift) if char != ' ' else ' '
+
     # Convert encrypted_string into a list, encrypt each character and return the new list.
     crypted_string = ''.join([encryptChar(char, shift) for char in list(string_to_encrypt.upper())])
     return crypted_string
+
 
 def caesarDecrypt(string_to_decrypt:str, shift:int) -> str:
     return caesarInput(string_to_decrypt, shift * -1)
