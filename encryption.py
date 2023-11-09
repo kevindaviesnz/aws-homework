@@ -32,3 +32,54 @@ Use a public key to verify the signature
 Describe in words how to get around not being able to sign a very large message.
 '''
 
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives import hashes
+
+
+private_key = rsa.generate_private_key(
+    public_exponent=65537, 
+    key_size=2048,         
+    backend=default_backend()
+)
+
+public_key = private_key.public_key()
+
+message = b"Message to be signed"
+corrupted_message = b"Message to be signed (corrupted)."
+
+# Sign the message using the private key
+signature = private_key.sign(message, padding.PKCS1v15(), hashes.SHA384())
+
+try:
+    public_key.verify(
+        signature,
+        message,
+        padding.PKCS1v15(),
+        hashes.SHA384()
+    )  
+    print('(1) Signature is correct.')  
+except Exception as e:
+    print('(1) Message is corrupted.')
+    print(e)
+
+try:
+    public_key.verify(
+        signature,
+        corrupted_message,
+        padding.PKCS1v15(),
+        hashes.SHA384()
+    )  
+    print('(2) Signature is correct.')  
+except Exception as e:
+    print('(2) Message is corrupted.')
+    print(e)
+
+print("All done.")
+
+'''
+You can get around not being able to sign a large message by hashing it first, as hashes are of
+a fixed length.
+'''
