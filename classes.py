@@ -8,7 +8,7 @@ Inside ElectricCar class:
 Test the drive behaviour of ElectricCar class:
     initialize an object from ElectricCar class "my_ev"
     call 'my_ev.drive(some_distance) a few times
-    notice via print(my_ev.__dict__) that the range has been reduce.
+    notice via print(my_ev.__dict__) that the range has been reduced.
    
 Inside IceCar class:
     redefine the drive(self, distance) function again.
@@ -25,6 +25,7 @@ Test the drive behaviour of IceCAr class:
 class Car:
     
     def __init__(self, brand:str, milage_km:int) -> None:
+        assert(milage_km > 0)
         self.brand = brand
         self.milage_km = milage_km
 
@@ -36,13 +37,14 @@ class ElectricCar(Car):
 
     def __init__(self, brand:str, milage_km:int, range:int) -> None:
         super().__init__(brand, milage_km)
+        assert(range > 0)
         self.range = range
 
     def drive(self, distance_km: float):
         super().drive(distance_km)
-        # @todo range cannot be less than 0
-        self.range -= distance_km
-
+        new_range = self.range - distance_km
+        assert(new_range > 0, "Oh no! You've run out of battery!")
+        
 
 my_ev_car = ElectricCar(brand='tesla', milage_km=200, range=20000)
 my_ev_car.drive(distance_km=100)
@@ -56,6 +58,17 @@ assert(my_ev_car.range == 19880)
 my_ev_car.drive(distance_km=200)
 assert(my_ev_car.milage_km == 520)
 assert(my_ev_car.range == 19680)
+
+# For both EV and ICE cars distance_km can't be less than 0 when calling drive()
+my_ev_car.drive(distance_km= -1)
+# For EVs drive() method should not set range to a value less than 0 
+my_ev_car.drive(20001)
+
+# For both EV and ICE cars milage_km can't be less than 0
+my_crapped_out_ev_car = ElectricCar(brand='tesla', milage_km=-1, range=20000)
+# For EVs range cannot be less than 0
+my_other_crapped_out_ev_car = ElectricCar(brand='tesla', milage_km=100, range=-1)
+
 
 print(my_ev_car.__dict__)
 
@@ -74,13 +87,16 @@ Test the drive behaviour of IceCAr class:
 class IceCar(Car):
     def __init__(self, brand:str, milage_km:int, fuel_consumption:float, fuel_level:float) -> None:
         Car.__init__(self, brand, milage_km)
+        assert(fuel_consumption > 0)
+        assert(fuel_level > 0)
         self.fuel_consumption = fuel_consumption
         self.fuel_level = fuel_level
 
     def drive(self, distance_km: float):
         super().drive(distance_km)
-        # @todo fuel level cannot be less than 0
-        self.fuel_level -= (distance_km * self.fuel_consumption / 100)
+        new_fuel_level = self.fuel_level - (distance_km * self.fuel_consumption / 100)
+        assert(new_fuel_level > 0, "Oh no! You've run out of petrol!")
+        self.fuel_level = new_fuel_level
 
 my_ice_car = IceCar(brand='V8', milage_km=100, fuel_consumption=100, fuel_level=2000)
 
@@ -95,6 +111,19 @@ assert(my_ice_car.fuel_level == 1850.0)
 my_ice_car.drive(distance_km = 200)
 assert(my_ice_car.milage_km == 450)
 assert(my_ice_car.fuel_level == 1650.0)
+
+# For both EV and ICE cars distance_km can't be less than 0 when calling drive()
+my_ice_car.drive(distance_km= -1)
+# For ICE cars drive() method should not set fuel level to a value less than 0 
+my_ice_car.drive(50000)
+
+# For both EV and ICE cars milage_km can't be less than 0
+my_crapped_out_ice_car = IceCar(brand='V8', milage_km=-1, fuel_consumption=100, fuel_level=2000)
+# For ICE cars fuel consumption cannot be less than 0
+my_other_crapped_out_ice_car = IceCar(brand='V8', milage_km=-1, fuel_consumption=-1, fuel_level=2000)
+# For ICE cars fuel level cannot be less than 0
+my_really_crapped_out_ice_car = IceCar(brand='V8', milage_km=1000, fuel_consumption=100, fuel_level=-1)
+
 
 print(my_ice_car.__dict__)
 
