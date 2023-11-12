@@ -30,7 +30,7 @@ class Car:
         self.milage_km = milage_km
 
     def drive(self, distance_km:float):
-        assert distance_km > 0,  f"distance_km must be greater than 0 (got {distance_km})"
+        assert distance_km > 0,  f"distance_km must be greater than 0 (got {distance_km})"        
         self.milage_km += distance_km
 
 
@@ -61,15 +61,28 @@ assert my_ev_car.milage_km == 520, "Expected milage_km to be 520"
 assert my_ev_car.range == 19680, "Expected range to be 19680"
 
 # For both EV and ICE cars distance_km can't be less than 0 when calling drive()
-my_ev_car.drive(distance_km= -1)
-# For EVs drive() method should not set range to a value less than 0 
-my_ev_car.drive(20001)
+try:
+    my_ev_car.drive(distance_km= -1)
+except Exception as e:
+    print(e)
 
-# For both EV and ICE cars milage_km can't be less than 0
-my_crapped_out_ev_car = ElectricCar(brand='tesla', milage_km=-1, range=20000)
-# For EVs range cannot be less than 0
-my_other_crapped_out_ev_car = ElectricCar(brand='tesla', milage_km=100, range=-1)
+try:
+    # For EVs drive() method should not set range to a value less than 0 
+    my_ev_car.drive(20001)
+except Exception as e:
+    print(e)
 
+try:    
+    # For both EV and ICE cars milage_km can't be less than 0
+    my_crapped_out_ev_car = ElectricCar(brand='tesla', milage_km=-1, range=20000)
+except Exception as e:
+    print(e)    
+
+try:
+    # For EVs range cannot be less than 0
+    my_other_crapped_out_ev_car = ElectricCar(brand='tesla', milage_km=100, range=-1)
+except Exception as e:
+    print(e)    
 
 print(my_ev_car.__dict__)
 
@@ -113,17 +126,35 @@ my_ice_car.drive(distance_km = 200)
 assert my_ice_car.milage_km == 450
 assert my_ice_car.fuel_level == 1650.0
 
-# For both EV and ICE cars distance_km can't be less than 0 when calling drive()
-my_ice_car.drive(distance_km= -1)
-# For ICE cars drive() method should not set fuel level to a value less than 0 
-my_ice_car.drive(50000)
+try:
+    # For both EV and ICE cars distance_km can't be less than 0 when calling drive()
+    my_ice_car.drive(distance_km= -1)
+except Exception as e:
+    print(e)
 
-# For both EV and ICE cars milage_km can't be less than 0
-my_crapped_out_ice_car = IceCar(brand='V8', milage_km=-1, fuel_consumption=100, fuel_level=2000)
-# For ICE cars fuel consumption cannot be less than 0
-my_other_crapped_out_ice_car = IceCar(brand='V8', milage_km=-1, fuel_consumption=-1, fuel_level=2000)
-# For ICE cars fuel level cannot be less than 0
-my_really_crapped_out_ice_car = IceCar(brand='V8', milage_km=1000, fuel_consumption=100, fuel_level=-1)
+try:
+    # For ICE cars drive() method should not set fuel level to a value less than 0 
+    my_ice_car.drive(50000)
+except Exception as e:
+    print(e)
+
+try:
+    # For both EV and ICE cars milage_km can't be less than 0
+    my_crapped_out_ice_car = IceCar(brand='V8', milage_km=-1, fuel_consumption=100, fuel_level=2000)
+except Exception as e:
+    print(e)
+
+try:    
+    # For ICE cars fuel consumption cannot be less than 0
+    my_other_crapped_out_ice_car = IceCar(brand='V8', milage_km=-1, fuel_consumption=-1, fuel_level=2000)
+except Exception as e:
+    print(e)
+          
+try:     
+    # For ICE cars fuel level cannot be less than 0
+    my_really_crapped_out_ice_car = IceCar(brand='V8', milage_km=1000, fuel_consumption=100, fuel_level=-1)
+except Exception as e:
+    print(e)
 
 
 print(my_ice_car.__dict__)
@@ -157,16 +188,18 @@ class Triangle(Shape):
 
     def __init__(self, side_a:int, side_b:int, side_c:int) -> None:
         super().__init__()
+
         # Put sides into an array, sort, then verify that the last
-        # side is not 0 or less and that the sum of the last two sides
-        # are not equal to or less than the length of the first side (longest side).
-        sides_sorted = sorted([side_a, side_b, side_c])
-        assert sides_sorted[2] > 0 and sides_sorted[1] + sides_sorted[2] > sides_sorted[0], "Invalid triangle"
+        sides_sorted = sorted([side_a, side_b, side_c], reverse=True)
+        
+        assert sides_sorted[2] > 0, "Length of each side of the triangle should be greater than 0."
+        assert sides_sorted[0] < sides_sorted[1] + sides_sorted[2], f"Length of the longest side ({sides_sorted[0]} should be less than the sum of the other two sides {sides_sorted[1]}+{sides_sorted[2]})"
+
         self.side_a = side_a
         self.side_b = side_b
         self.side_c = side_c
     
-    def area(self) -> int:
+    def area(self) -> float:
         # Determine perimeter
         p = sum([self.side_a, self.side_b, self.side_c])
         # Determine the semiperimeter
@@ -174,26 +207,46 @@ class Triangle(Shape):
         # Use Heron's formula to find the area of the triangle
         return math.sqrt(s * (s - self.side_a) * (s - self.side_b) * (s - self.side_c))
 
-# @todo tests
-my_triangle = Triangle(side_a = 20, side_b = 40, side_c = 80)
-#print(my_triangle.area())
-#assert Triangle.area() == 10)
+my_triangle = Triangle(side_a = 60, side_b = 40, side_c = 80)
+assert int(my_triangle.area()) == 1161, f"Incorrect area for triangle, expected but got {int(my_triangle.area)}"
+
+try:
+    # Sides cannot be less than 0
+    my_faulty_triangle = Triangle(side_a = 60, side_b = -40, side_c = 80)
+except Exception as e:
+    print(e)
 
 class Rectangle(Shape):
 
     def __init__(self, side_a: int, side_b: int) -> int:
         super().__init__()
-        assert side_a > 0 and side_b > 0 and side_a != side_b, "Invalid reactangle"
+        assert side_a > 0 and side_b > 0, "Each side of the reactangle should be greater than 0"
+        assert side_a != side_b, "Sides of the reactangle should not be equal"
         self.side_a = side_a
         self.side_b = side_b
 
     def area(self) -> int:
         return self.side_a * self.side_b
 
-# todo tests
 my_reactangle = Rectangle(20, 50)
-assert my_reactangle.area() == 1000, "Expected area of rectangle to be 1000"
+area_of_reactangle = my_reactangle.area()
+assert area_of_reactangle == 1000, "Expected area of rectangle to be 1000 but got {area_of_reactangle}"
            
+try:
+    my_invalid_reactangle = Rectangle(-1, 100)        
+except Exception as e:
+    print(e)
+
+try:
+    my_invalid_reactangle = Rectangle(100, -1)        
+except Exception as e:
+    print(e)
+
+try:
+    is_really_a_square = Rectangle(100, 100)        
+except Exception as e:
+    print(e)
+
 class Circle(Shape):
 
     def __init__(self, radius:int):
@@ -205,15 +258,14 @@ class Circle(Shape):
         # area = pi * (radius squared)
         return math.pi * pow(self.radius, 2)
 
-# @todo tests
 my_circle = Circle(100)
-print(my_circle.area())
-assert int(my_circle.area()) == 31415, "Expected area of circle to be 31415"
+area_of_circle = my_circle.area()
+assert int(area_of_circle) == 31415, f"Expected area of circle to be 31415 but got {area_of_circle}"
 
-
-
-
-
+try:
+    my_invalid_circle = Circle(-10)
+except Exception as e:
+    print(e)
 
 '''
 modules
