@@ -1,0 +1,2 @@
+Create virtual environment: python3 -m venv .venv
+Change environment: source .venv/bin/activate
