@@ -48,7 +48,7 @@ in the body of the request.
 # item is passed by the request body as it is a complex type.
 def update_item(serial_number:str, item:InventoryItem):
     existing_item = next((i for i in my_inventory_items if i.serial_number == serial_number), None)
-    #existing_item = my_inventory_items.get(serial_number)
+    #APIexisting_item = my_inventory_items.get(serial_number)
     if existing_item:
         my_inventory_items.remove(existing_item)
     my_inventory_items.append(item)
