@@ -49,7 +49,13 @@ def test_get_api():
 def test_delete_api():
 
     response = client.delete("/items/T240")
+    assert response.status_code == 200, f"Expecting 200 but got {response.status_code}"
+
+    # confirm item was deleted
+    response = client.get("/items/T240")
     assert response.status_code == 404, f"Expecting 404 but got {response.status_code}"
+
+
 
         
     

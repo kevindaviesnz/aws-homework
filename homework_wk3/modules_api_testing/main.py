@@ -18,9 +18,12 @@ my_inventory_item_dict: Dict[str, InventoryItem] = {}
 item_origin = ItemOrigin(country="Ethiopia", production_date="10th Aug 2021")
 
 # Create an in-memory list
+'''
 my_inventory_items = [
   InventoryItem(name="printer", quantity=1, serial_number="H896", origin=item_origin)
 ]
+
+'''
 
 
 
@@ -28,6 +31,7 @@ my_inventory_items = [
 def read_item(serial_number: str) -> InventoryItem:
     if serial_number in my_inventory_item_dict.keys():
         return my_inventory_item_dict[serial_number]
+        #return f"Item with serial number {serial_number} found"
     else:
         raise HTTPException(status_code=404, detail=f"Could not find item with serial number {serial_number}")
 
@@ -80,6 +84,8 @@ def update_item(serial_number:str, item:InventoryItem) -> None:
 def delete_item(serial_number:str) -> Dict:
     if serial_number in my_inventory_item_dict.keys():
         my_inventory_item_dict.pop(serial_number)
+        if serial_number in my_inventory_item_dict.keys():
+            raise HTTPException(status_code=300, detail=f"Failed to delete with serial number {serial_number}")
         return {"message":f"Deleted item {serial_number}"}
     else:
         raise HTTPException(status_code=404, detail=f"Could not find item with serial number {serial_number}")
