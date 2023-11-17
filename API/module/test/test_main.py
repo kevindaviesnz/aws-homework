@@ -1,6 +1,6 @@
 # pytest
 
-from fastapi.testclient import TestClient
+from fastapi.testclient import FastAPI, TestClient
 from main import app
 
 # Looks for files names with test_*.py
