@@ -69,7 +69,7 @@ def update_item(serial_number:str, item:InventoryItem) -> None:
 
 '''
     existing_item = next((i for i in my_inventory_items if i.serial_number == serial_number), None)
-    #existing_item = my_inventory_items.get(serial_number)
+    #APIexisting_item = my_inventory_items.get(serial_number)
     if existing_item:
         my_inventory_items.remove(existing_item)
     my_inventory_items.append(item)
