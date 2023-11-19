@@ -54,7 +54,7 @@ def test_delete_api():
     # confirm item was deleted
     response = client.get("/items/T240")
     assert response.status_code == 404, f"Expecting 404 but got {response.status_code}"
-
+g
 
 
         
