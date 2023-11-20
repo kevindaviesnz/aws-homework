@@ -1,0 +1,13 @@
+Unittests
+put
+get
+delete
+get (check item is deleted)
+
+If having issues with FastAPI
+
+$ deactivate
+$ pip3 list
+$ sudo pip3 install fastapi[all] --break-system-packages
+
+/API/module/test
