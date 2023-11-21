@@ -1,0 +1,15 @@
+SELECT * FROM `customer` where `customer`.`store_id` = 2
+
+INSERT INTO `customer` (`customer_id`, `store_id`, `first_name`, `last_name`, `email`, `address_id`, `active`, `create_date`, `last_update`)
+VALUES (
+    (225, 2, 'Adam', 'Smith', 'adamsky@example.com', 228, 'Y', NOW(), NOW()),
+    (226, 2, 'Karl', 'Marx', 'marxy@example.com', 229, 'Y', NOW(), NOW()),
+    (227, 2, 'Friedrich', 'Hayek', 'friedchips@example.com', 230, 'Y', NOW(), NOW()),
+)    
+
+(Using LIMIT only works if sqlite was compiled with SQLITE_ENABLE_UPDATE_DELETE_LIMIT)
+UPDATE customer
+SET store_id = 2
+WHERE store_id = 1
+AND ROWID IN (SELECT ROWID FROM customer WHERE store_id = 1 LIMIT 5)
+
