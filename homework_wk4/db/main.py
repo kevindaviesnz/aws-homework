@@ -83,8 +83,7 @@ def change_secret_name(hero_update:HeroUpdateDTO):
 
 
 
-
-
+# integration methods: API, messenging, file
 
 
 # Run:
