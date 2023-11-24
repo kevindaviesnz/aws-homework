@@ -1,4 +1,5 @@
-from pydantic import BaseModel, field_validator
+#from pydantic import BaseModel, field_validator
+from pydantic import BaseModel
 from dto import ItemOrigin, InventoryItem
 from typing import Dict, List
 import json
@@ -26,30 +27,22 @@ my_inventory_items = [
 '''
 
 
-
+# OK
 @app.get("/items/{serial_number}")
-def read_item(serial_number: str) -> InventoryItem:
-    if serial_number in my_inventory_item_dict.keys():
+def read_item(serial_number: str): # -> InventoryItem
+    #return my_inventory_item_dict
+    yield my_inventory_item_dict
+    return {}
+    if my_inventory_item_dict[serial_number]:
         return my_inventory_item_dict[serial_number]
-        #return f"Item with serial number {serial_number} found"
     else:
         raise HTTPException(status_code=404, detail=f"Could not find item with serial number {serial_number}")
 
 
-
-    
-    item = next((i for i in my_inventory_items if i.serial_number == serial_number), None)
-    if item is None:
-        raise HTTPException(status_code=404, detail=f"Could not find item with serial number {serial_number}")
-    
-    # Convert the item to a dictionary, ensuring nested models are properly converted
-    item_dict = json.loads(json.dumps(item.dict()))
-    return item_dict
-
 @app.get("/items/")
-def read_items() -> List[InventoryItem]:
-    return my_inventory_item_dict.values()
-
+def read_items():
+    # Returns a list object where each item is a dictionary object with serial number as key.
+    return my_inventory_item_dict
 
 '''
 Requires something like:
@@ -68,8 +61,25 @@ in the body of the request.
 # item is passed by the request body as it is a complex type.
 def update_item(serial_number:str, item:InventoryItem) -> None:
     my_inventory_item_dict[serial_number] = item
-    print(serial_number)
-    print(my_inventory_item_dict)
+    #yield(serial_number) # [<serial _number>]
+    '''
+    [
+        {
+            "name": "Product X",
+            "quantity": 1,
+            "serial_number": "",
+            "origin": {
+                "country": "Ethiopia",
+                "production_date": "11 Oct 2300"
+            }
+        },
+        {
+           ... 
+            
+        }
+    ]
+    '''
+    yield(my_inventory_item_dict.items())
 
 '''
     existing_item = next((i for i in my_inventory_items if i.serial_number == serial_number), None)
@@ -79,6 +89,17 @@ def update_item(serial_number:str, item:InventoryItem) -> None:
     my_inventory_items.append(item)
     return item
 '''
+
+
+'''
+@app.get("/items/")
+def read_items() -> List[InventoryItem]:
+    return {}
+    #return my_inventory_item_dict.values()
+
+'''
+
+
 
 @app.delete("/items/{serial_number}")
 def delete_item(serial_number:str) -> Dict:
@@ -93,6 +114,6 @@ def delete_item(serial_number:str) -> Dict:
 
 
 # Run:
-# $ uvicorn main:app --reload
+# $ uvicorn main:app --reload --port 8001
 
 
