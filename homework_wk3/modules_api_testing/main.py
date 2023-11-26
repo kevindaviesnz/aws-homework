@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from dto import ItemOrigin, InventoryItem
 from typing import Dict, List
 import json
+from functools import reduce
 
 from fastapi import FastAPI, HTTPException
 
@@ -31,7 +32,9 @@ my_inventory_items = [
 @app.get("/items/{serial_number}")
 def read_item(serial_number: str): # -> InventoryItem
     #return my_inventory_item_dict
-    yield my_inventory_item_dict
+    #yield my_inventory_item_dict
+    # Convert in memory item list to dictionary indexed by serial keys
+    d = reduce(lambda acc, item:{**acc, **item}, my_inventory_item_dict, {})
     return {}
     if my_inventory_item_dict[serial_number]:
         return my_inventory_item_dict[serial_number]
